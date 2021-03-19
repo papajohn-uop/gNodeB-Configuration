@@ -1,6 +1,7 @@
 
 from fastapi import APIRouter
 import socket
+import subprocess
 
 router = APIRouter()
 
@@ -16,6 +17,10 @@ system_route_resp["GET"]["getConnectionStatus"]="Check connection status with ta
 
 REMOTE_SERVER = "172.16.10.203"
 
+
+CHECK_VALIDITY_CMD=["sshpass", "-p", "toor", "ssh", "root@172.16.10.203","exit"]
+
+
 def _getConnectionStatus():
     try:
         host = socket.gethostbyname(REMOTE_SERVER)
@@ -26,10 +31,28 @@ def _getConnectionStatus():
     return False
 
 
+
+def _checkCredentials():
+    print(CHECK_VALIDITY_CMD)
+    process = subprocess.Popen(CHECK_VALIDITY_CMD, stdout=subprocess.PIPE)
+    out=process.communicate()[0].decode('utf-8')
+    rc1=process.returncode
+    print(out)
+    print(rc1)
+    return not(rc1)
+
+
 @router.get("/",  description="***** SYSTEM COMMANDS ROOT*****")
 async def system_root():
     return system_route_resp
 
 @router.get("/getConnectionStatus", description="***** Checks and returns connection status with target device*****", response_model=bool)
-async def ws_getConnectionStatus():
-        return _getConnectionStatus()
+async def system_getConnectionStatus():
+    return _getConnectionStatus()
+
+
+
+
+@router.get("/checkCredentials", description="***** Checks and returns connection status with target device*****", response_model=bool)
+async def system_checkCredentials():
+    return _checkCredentials()
