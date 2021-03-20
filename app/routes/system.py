@@ -20,7 +20,7 @@ system_route_resp["GET"]["getConnectionStatus"]="Check connection status with ta
 
 
 
-CMD_TEMPLATE=["sshpass", "-p", "PASSWORD", "ssh", "USER@UP","CMD"]
+CMD_TEMPLATE=["sshpass", "-p", "PASSWORD", "ssh", "USER@IP","CMD"]
 
 
 
@@ -36,14 +36,18 @@ def _getConnectionStatus():
 
 
 
-def _checkCredentials():
+
+def _createCommand(cmd):
     myCtx=main.ctx
     tmpCMD=CMD_TEMPLATE
     tmpCMD[2]=myCtx.target.password
     tmpCMD[4]='@'.join([myCtx.target.user,str(myCtx.target.IP)])
     tmpCMD[5]="exit"
+    return tmpCMD
 
-    process = subprocess.Popen(tmpCMD, stdout=subprocess.PIPE)
+def _checkCredentials():
+    checkCredCMD=_createCommand("exit")
+    process = subprocess.Popen(checkCredCMD, stdout=subprocess.PIPE)
     out=process.communicate()[0].decode('utf-8')
     rc1=process.returncode
     print(out)
