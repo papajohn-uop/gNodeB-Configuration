@@ -3,6 +3,8 @@ from fastapi import APIRouter
 import socket
 import subprocess
 import ipaddress
+import main
+
 
 router = APIRouter()
 
@@ -16,15 +18,16 @@ system_route_resp["Module"]="Websocket related commands"
 system_route_resp["GET"]=dict()
 system_route_resp["GET"]["getConnectionStatus"]="Check connection status with target device"
 
-REMOTE_SERVER = "172.16.10.203"
 
 
-CHECK_VALIDITY_CMD=["sshpass", "-p", "toor", "ssh", "root@172.16.10.203","exit"]
+CMD_TEMPLATE=["sshpass", "-p", "PASSWORD", "ssh", "USER@UP","CMD"]
+
 
 
 def _getConnectionStatus():
+    print(main.ctx.target.IP)
     try:
-        host = socket.gethostbyname(REMOTE_SERVER)
+        host = socket.gethostbyname(str(main.ctx.target.IP))
         socket.create_connection((host, 80), 2)
         return True
     except:
@@ -34,8 +37,13 @@ def _getConnectionStatus():
 
 
 def _checkCredentials():
-    print(CHECK_VALIDITY_CMD)
-    process = subprocess.Popen(CHECK_VALIDITY_CMD, stdout=subprocess.PIPE)
+    myCtx=main.ctx
+    tmpCMD=CMD_TEMPLATE
+    tmpCMD[2]=myCtx.target.password
+    tmpCMD[4]='@'.join([myCtx.target.user,str(myCtx.target.IP)])
+    tmpCMD[5]="exit"
+
+    process = subprocess.Popen(tmpCMD, stdout=subprocess.PIPE)
     out=process.communicate()[0].decode('utf-8')
     rc1=process.returncode
     print(out)
