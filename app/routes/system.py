@@ -2,6 +2,7 @@
 from fastapi import APIRouter
 import socket
 import subprocess
+import ipaddress
 
 router = APIRouter()
 
@@ -46,13 +47,19 @@ def _checkCredentials():
 async def system_root():
     return system_route_resp
 
-@router.get("/getConnectionStatus", description="***** Checks and returns connection status with target device*****", response_model=bool)
+@router.get("/getConnectionStatus", description="***** Checks and returns connection status with target device*****")
 async def system_getConnectionStatus():
-    return _getConnectionStatus()
+    res=_getConnectionStatus()
+    return {"connectionStatus": res}
 
 
 
 
-@router.get("/checkCredentials", description="***** Checks and returns connection status with target device*****", response_model=bool)
+@router.get("/checkCredentials", description="***** Checks and returns connection status with target device*****")
 async def system_checkCredentials():
-    return _checkCredentials()
+    res=_getConnectionStatus()
+    if res:
+        res=_checkCredentials()
+        return {"credentialsVerified": res}
+    else:
+        return {"connectionStatus": res}
