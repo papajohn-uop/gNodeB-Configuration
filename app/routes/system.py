@@ -42,7 +42,7 @@ def _createCommand(cmd):
     tmpCMD=CMD_TEMPLATE
     tmpCMD[2]=myCtx.target.password
     tmpCMD[4]='@'.join([myCtx.target.user,str(myCtx.target.IP)])
-    tmpCMD[5]="exit"
+    tmpCMD[5]=cmd
     return tmpCMD
 
 def _checkCredentials():
@@ -75,3 +75,16 @@ async def system_checkCredentials():
         return {"credentialsVerified": res}
     else:
         return {"connectionStatus": res}
+
+
+
+@router.get("/checkServiceStatus", description="***** Checks and returns service status on the target device*****")
+async def system_checkCredentials():
+    checkServiceStatusCMD=_createCommand(" systemctl is-active  lte")
+    print(checkServiceStatusCMD)
+    process = subprocess.Popen(checkServiceStatusCMD, stdout=subprocess.PIPE)
+    out=process.communicate()[0].decode('utf-8')
+    rc1=process.returncode
+    print(out)
+    print(rc1)
+    return {"serviceStatus": out.strip('\n')}
