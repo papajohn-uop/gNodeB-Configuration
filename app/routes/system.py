@@ -3,7 +3,7 @@ from fastapi import APIRouter
 import socket
 import subprocess
 import ipaddress
-import main
+import common
 
 
 router = APIRouter()
@@ -14,45 +14,11 @@ router = APIRouter(
 )
 
 system_route_resp=dict()
-system_route_resp["Module"]="Websocket related commands"
+system_route_resp["Module"]="System related commands"
 system_route_resp["GET"]=dict()
 system_route_resp["GET"]["getConnectionStatus"]="Check connection status with target device"
+system_route_resp["GET"]["checkCredentials"]="Check targets device credentials"
 
-
-
-CMD_TEMPLATE=["sshpass", "-p", "PASSWORD", "ssh", "USER@IP","CMD"]
-
-
-
-def _getConnectionStatus():
-    print(main.ctx.target.IP)
-    try:
-        host = socket.gethostbyname(str(main.ctx.target.IP))
-        socket.create_connection((host, 80), 2)
-        return True
-    except:
-        pass
-    return False
-
-
-
-
-def _createCommand(cmd):
-    myCtx=main.ctx
-    tmpCMD=CMD_TEMPLATE
-    tmpCMD[2]=myCtx.target.password
-    tmpCMD[4]='@'.join([myCtx.target.user,str(myCtx.target.IP)])
-    tmpCMD[5]=cmd
-    return tmpCMD
-
-def _checkCredentials():
-    checkCredCMD=_createCommand("exit")
-    process = subprocess.Popen(checkCredCMD, stdout=subprocess.PIPE)
-    out=process.communicate()[0].decode('utf-8')
-    rc1=process.returncode
-    print(out)
-    print(rc1)
-    return not(rc1)
 
 
 @router.get("/",  description="***** SYSTEM COMMANDS ROOT*****")
@@ -61,7 +27,7 @@ async def system_root():
 
 @router.get("/getConnectionStatus", description="***** Checks and returns connection status with target device*****")
 async def system_getConnectionStatus():
-    res=_getConnectionStatus()
+    res=common._getConnectionStatus()
     return {"connectionStatus": res}
 
 
@@ -69,32 +35,13 @@ async def system_getConnectionStatus():
 
 @router.get("/checkCredentials", description="***** Checks and returns connection status with target device*****")
 async def system_checkCredentials():
-    res=_getConnectionStatus()
+    res=common._getConnectionStatus()
     if res:
-        res=_checkCredentials()
+        res=common._checkCredentials()
         return {"credentialsVerified": res}
     else:
         return {"connectionStatus": res}
 
 
-
-@router.get("/checkServiceStatus", description="***** Checks and returns service status on the target device*****")
-async def system_ServiceStatus():
-    res=_getConnectionStatus()
-    if res:
-        res=_checkCredentials()
-        if res:
-            checkServiceStatusCMD=_createCommand(" systemctl is-active  lte")
-            print(checkServiceStatusCMD)
-            process = subprocess.Popen(checkServiceStatusCMD, stdout=subprocess.PIPE)
-            out=process.communicate()[0].decode('utf-8')
-            rc1=process.returncode
-            print(out)
-            print(rc1)
-            return {"serviceStatus": out.strip('\n')}
-        else:
-            return {"credentialsVerified": res}
-    else:
-        return {"connectionStatus": res}
 
     
