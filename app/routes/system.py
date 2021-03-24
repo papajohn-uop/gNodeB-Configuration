@@ -79,12 +79,22 @@ async def system_checkCredentials():
 
 
 @router.get("/checkServiceStatus", description="***** Checks and returns service status on the target device*****")
-async def system_checkCredentials():
-    checkServiceStatusCMD=_createCommand(" systemctl is-active  lte")
-    print(checkServiceStatusCMD)
-    process = subprocess.Popen(checkServiceStatusCMD, stdout=subprocess.PIPE)
-    out=process.communicate()[0].decode('utf-8')
-    rc1=process.returncode
-    print(out)
-    print(rc1)
-    return {"serviceStatus": out.strip('\n')}
+async def system_ServiceStatus():
+    res=_getConnectionStatus()
+    if res:
+        res=_checkCredentials()
+        if res:
+            checkServiceStatusCMD=_createCommand(" systemctl is-active  lte")
+            print(checkServiceStatusCMD)
+            process = subprocess.Popen(checkServiceStatusCMD, stdout=subprocess.PIPE)
+            out=process.communicate()[0].decode('utf-8')
+            rc1=process.returncode
+            print(out)
+            print(rc1)
+            return {"serviceStatus": out.strip('\n')}
+        else:
+            return {"credentialsVerified": res}
+    else:
+        return {"connectionStatus": res}
+
+    
