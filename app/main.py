@@ -1,14 +1,15 @@
 from fastapi import Depends, FastAPI
-from routes import  system 
+from routes import  system, service 
 
 import ipaddress
-
+import subprocess
+import socket
 
 app = FastAPI()
 
 
 app.include_router(system.router)
-
+app.include_router(service.router)
 
 
 class Target:
@@ -77,10 +78,15 @@ async def startup_event():
 
 main_resp=dict()
 main_resp["/system"]="System related commands"
+main_resp["/service"]="Service related commands"
 
 
 
 @app.get("/")
 async def root():
     return main_resp
+
+
+
+
 
