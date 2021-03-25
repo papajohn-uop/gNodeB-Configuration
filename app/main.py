@@ -1,5 +1,5 @@
 from fastapi import Depends, FastAPI
-from routes import  system, service ,ws, screen
+from app.routes import  system, service ,ws, screen
 
 import ipaddress
 import subprocess

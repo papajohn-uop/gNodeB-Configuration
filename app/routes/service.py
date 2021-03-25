@@ -3,7 +3,7 @@ from fastapi import APIRouter
 import socket
 import subprocess
 import ipaddress
-import common
+from .. import common
 
 
 

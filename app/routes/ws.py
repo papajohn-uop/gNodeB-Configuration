@@ -2,7 +2,7 @@ from fastapi import APIRouter
 import socket
 import subprocess
 from pydantic import BaseModel
-import common
+from .. import common
 from websocket import create_connection
 
 router = APIRouter()
