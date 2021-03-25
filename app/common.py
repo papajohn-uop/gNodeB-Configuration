@@ -19,6 +19,8 @@ def _getConnectionStatus():
 
 
 CMD_TEMPLATE=["sshpass", "-p", "PASSWORD", "ssh", "USER@IP","CMD"]
+SCREEN_CMD_TEMPLATE=["sshpass", "-p", "PASSWORD", "ssh","USER@IP","/root/REST_API/api_screen_log.sh", "CMD"]
+
 
 def _createCommand(cmd):
     myCtx=main.ctx
@@ -27,6 +29,16 @@ def _createCommand(cmd):
     tmpCMD[4]='@'.join([myCtx.target.user,str(myCtx.target.IP)])
     tmpCMD[5]=cmd
     return tmpCMD
+
+
+def _createScreenCommand(cmd):
+    myCtx=main.ctx
+    tmpCMD=SCREEN_CMD_TEMPLATE
+    tmpCMD[2]=myCtx.target.password
+    tmpCMD[4]='@'.join([myCtx.target.user,str(myCtx.target.IP)])
+    tmpCMD[6]=cmd
+    return tmpCMD
+
 
 def _checkCredentials():
     checkCredCMD=_createCommand("exit")

@@ -65,22 +65,6 @@ REMOTE_SERVER = "172.16.10.203"
 async def screen_root_get():
     return screen_root_resp
 
-
-
-
-
-'''
-@router.get("/CMD1",  description="***** SCREEN COMMAND1 DESCRIPTION*****")
-async def ws_cmd1():
-    return [{"module": "WEBSOCKET command 1"}]
-
-
-@router.get("/getConnectionStatus", description="***** Checks and returns connection status with target device*****", response_model=bool)
-async def ws_getConnectionStatus():
-        return _getConnectionStatus()
-
-
-'''
 @router.get("/commands", description="***** AVAILABLE SCREEN COMMANDS ROOT*****")
 async def screen_commands():
     return (list(screen_root_resp["GET"]["COMMANDS"].keys()))
@@ -103,18 +87,25 @@ async def screen_commands(command):
     print(keys)
     print(command)
     if command in keys:
-        print("YEAH")
-        #setup command
-        SCREEN_CMD.pop()
-        SCREEN_GNODEB_CMD=SCREEN_CMD
-        cmd=command
-        SCREEN_GNODEB_CMD.append(cmd)    
-        print(SCREEN_GNODEB_CMD)
-        process = subprocess.Popen(SCREEN_GNODEB_CMD, stdout=subprocess.PIPE)
-        out=process.communicate()[0].decode('utf-8')
-        rc1=process.returncode
-        
-        data={"path":"SCREEN","rc":rc1,"cmd":command,"output":out}
+        res=common._getConnectionStatus()
+        if res:
+            res=common._checkCredentials()
+            if res:
+                print("YEAH")
+                #setup command
+                screenCMD=common._createScreenCommand(command)
+                print(screenCMD)
+                process = subprocess.Popen(screenCMD, stdout=subprocess.PIPE)
+                out=process.communicate()[0].decode('utf-8')
+                rc1=process.returncode
+                
+                data={"path":"SCREEN","rc":rc1,"cmd":command,"output":out}
+            else:
+                print("CREDENTIALS DO NOT MATCH")
+                data={"rc":999,"cmd":command,"output":"Wrong credentials"}
+        else:
+            print("No Connection")
+            data={"rc":999,"cmd":command,"output":"No Connection"}
     else:
         print("OOPS")
         data={"path":"SCREEN","rc":999,"cmd":command,"output":"INVALID COMMAND"}
