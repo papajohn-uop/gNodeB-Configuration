@@ -1,5 +1,5 @@
 from fastapi import Depends, FastAPI
-from routes import  system, service ,ws
+from routes import  system, service ,ws, screen
 
 import ipaddress
 import subprocess
@@ -11,7 +11,7 @@ app = FastAPI()
 app.include_router(system.router)
 app.include_router(service.router)
 app.include_router(ws.router)
-
+app.include_router(screen.router)
 
 class Target:
     def __init__(self,user=None, password=None, IP=None):
