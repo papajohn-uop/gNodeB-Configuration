@@ -35,7 +35,7 @@ async def system_ServiceStatus():
         res=common._checkCredentials()
         if res:
             checkServiceStatusCMD=common._createCommand(" systemctl is-active  lte")
-            print(checkServiceStatusCMD)
+            #print(checkServiceStatusCMD)
             process = subprocess.Popen(checkServiceStatusCMD, stdout=subprocess.PIPE)
             out=process.communicate()[0].decode('utf-8')
             rc1=process.returncode
@@ -55,7 +55,7 @@ async def system_startService():
         res=common._checkCredentials()
         if res:
             checkServiceStatusCMD=common._createCommand("service lte start")
-            print(checkServiceStatusCMD)
+            #print(checkServiceStatusCMD)
             process = subprocess.Popen(checkServiceStatusCMD, stdout=subprocess.PIPE)
             out=process.communicate()[0].decode('utf-8')
             rc1=process.returncode
@@ -79,7 +79,7 @@ async def system_stopService():
         res=common._checkCredentials()
         if res:
             checkServiceStatusCMD=common._createCommand("service lte stop")
-            print(checkServiceStatusCMD)
+            #print(checkServiceStatusCMD)
             process = subprocess.Popen(checkServiceStatusCMD, stdout=subprocess.PIPE)
             out=process.communicate()[0].decode('utf-8')
             rc1=process.returncode
@@ -104,7 +104,7 @@ async def system_restartService():
         res=common._checkCredentials()
         if res:
             checkServiceStatusCMD=common._createCommand("service lte restart")
-            print(checkServiceStatusCMD)
+            #print(checkServiceStatusCMD)
             process = subprocess.Popen(checkServiceStatusCMD, stdout=subprocess.PIPE)
             out=process.communicate()[0].decode('utf-8')
             rc1=process.returncode

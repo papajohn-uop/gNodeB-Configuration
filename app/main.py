@@ -1,5 +1,5 @@
 from fastapi import Depends, FastAPI
-from routes import  system, service 
+from routes import  system, service ,ws
 
 import ipaddress
 import subprocess
@@ -10,6 +10,7 @@ app = FastAPI()
 
 app.include_router(system.router)
 app.include_router(service.router)
+app.include_router(ws.router)
 
 
 class Target:
@@ -79,6 +80,7 @@ async def startup_event():
 main_resp=dict()
 main_resp["/system"]="System related commands"
 main_resp["/service"]="Service related commands"
+main_resp["/ws"]="WebSockets related commands"
 
 
 
