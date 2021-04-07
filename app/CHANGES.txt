@@ -1,3 +1,23 @@
-19/3/2021
+25/03/2021
+    Created dockerfile
+    Modified coomon to allow ssh without hostchecking
+    Added configuration endpoint
+    Cleanup screen router
+    Added screen router and screen related endpoints
+    Added websockets router and webscoket related endpoints
+24/03/2021
+    Added start,stop,restart service endpoints
+    Moved help function to common
+    Added new router for services
+    Fixed checkServiceStatus endpoint
+20/03/2021
+    Add checkServiceStatus endpoint
+    Commands created by fucntion
+    Use context to create command
+    Added context
+    Modified getConnectionStatus and checkCredentials endpoints.
+19/03/2021
     Created basic server
     Added system route (empty)
+    Added getConnectionStatus endpoint
+    Added checkCredentials endpoint

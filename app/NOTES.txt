@@ -1,3 +1,7 @@
-19/3/2021
+26/03/2021
+docker build -t gnodeb_conf .
+ 1331  docker run  --name test_conf5 -p 1123:1122 gnodeb_conf 
+
+19/03/2021
 Issue with finding routes: Solutionby export PYTHONPATH=$PWD . Need to set pythonpath to current dir
  

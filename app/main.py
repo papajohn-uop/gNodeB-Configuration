@@ -81,7 +81,7 @@ main_resp=dict()
 main_resp["/system"]="System related commands"
 main_resp["/service"]="Service related commands"
 main_resp["/ws"]="WebSockets related commands"
-
+main_resp["/screen"]="Screen related commands"
 
 
 @app.get("/")
